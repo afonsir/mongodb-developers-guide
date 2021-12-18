@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  mongodb:
+    image: mongo:5.0-focal
+    container_name: mongodb
+    ports:
+      - 27017:27017
+    volumes:
+      - mongodb-data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+      MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--username", "${DB_USER}", "--password", "${DB_PASSWORD}", "--eval", "'db.serverStatus().ok'"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+
+volumes:
+  mongodb-data:
